@@ -23,18 +23,18 @@ namespace RootCoin
             this.Amount = amount;
         }
 
-        public void SignTransaction(PrivateKey signingkey)
+        public void SignTransaction(PrivateKey signingKey)
         {
-            string FromAddressDER = BitConverter.ToString(FromAddress.toDer()).Replace("-", "");
-            string signingDER = BitConverter.ToString(signingkey.toDer()).Replace("-", "");
+            string fromAddressDER = BitConverter.ToString(FromAddress.toDer()).Replace("-", "");
+            string signingDER = BitConverter.ToString(signingKey.publicKey().toDer()).Replace("-", "");
 
-            if (FromAddressDER != signingDER)
+            if (fromAddressDER != signingDER)
             {
                 throw new Exception("You cannot sign transactions for other wallet!");
             }
 
             string txHash = this.CalculateHash();
-            this.Signature = Ecdsa.sign(txHash, signingkey);
+            this.Signature = Ecdsa.sign(txHash, signingKey);
         }
 
         public string CalculateHash()
